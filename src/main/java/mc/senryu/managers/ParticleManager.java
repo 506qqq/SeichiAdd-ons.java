@@ -1,11 +1,9 @@
 package mc.senryu.managers;
 
-import java.util.Objects;
-
 import org.apache.logging.log4j.Logger;
 
 import mc.senryu.BuildSkills;
-import net.minecraft.client.Minecraft;
+import mc.senryu.Senryu;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
@@ -15,22 +13,17 @@ import net.minecraft.world.World;
 public class ParticleManager {
 	Logger logger;
 
-	private static World world;
-	private static EntityPlayerSP player;
-
 	private static Item stick = Item.getItemById(280);
 
 	private double px;
 	private double py;
 	private double pz;
 
-	public ParticleManager() {
-		world = Minecraft.getMinecraft().world;
-		player = Minecraft.getMinecraft().player;
-	}
+	EntityPlayerSP player;
+	World world;
 
 	public void resetWorld() {
-		world = null;
+		return;
 	}
 
 	//#defineみたいなのってJavaにはないの...?
@@ -42,15 +35,10 @@ public class ParticleManager {
 
     //描画処理
     public void drawParticle() {
-    	if(Objects.isNull(player)) {//ぬるぽ回避※これdrawparticleの範疇超えてない..?
-    		player = Minecraft.getMinecraft().player;
-    		return;
-    	}
-    	else if(Objects.isNull(world)) {//ぬるぽ回避
-    		world = Minecraft.getMinecraft().world;
-    		return;
-    	}
-    	else if (player.getHeldItemOffhand().getItem().equals(stick)) {
+    	System.out.println("Fire");
+    	player = Senryu.getPlayer();
+    	world = Senryu.getWorld();
+    	if (player.getHeldItemOffhand().getItem().equals(stick)) {
     		byte Yaw = (byte)((int)(Math.floor((player.rotationYaw / 90.0D) + 0.5D)) & 3);
     		px = ((Math.round((player.posX)-0.5D))+0.5D);//n+0.5の形にする
     		py = Math.round(player.posY + 1.6F) - 0.5D;//この+1.6はBuildAssistより
@@ -73,11 +61,6 @@ public class ParticleManager {
     		this.showGrid(px, py, pz);
     	}
      }
-
-    public EntityPlayerSP getPlayer() {
-    	return player;
-    }
-
 
     //1ブロックの枠線にパーティクルを配置(引数: ブロックの中心座標(n+0.5の形))}
     public void showGrid(double x, double y, double z) {

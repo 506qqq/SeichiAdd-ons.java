@@ -1,8 +1,13 @@
 package mc.senryu;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.Logger;
 
 import mc.senryu.managers.ParticleManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -12,10 +17,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 @Mod(modid = Senryu.MODID, name = Senryu.NAME, version = Senryu.VERSION)
 @EventBusSubscriber
@@ -25,6 +27,9 @@ public class Senryu
     public static final String NAME = "Senryu-Mod";
     public static final String VERSION = "0.1-beta";
 
+	private static World world;
+	private static EntityPlayerSP player;
+	
     private static Logger logger;
     private static byte tickCount;
     private static ParticleManager prtMng;
@@ -44,7 +49,7 @@ public class Senryu
     			+ "*****************************************\n"
     			+ "\n"
     			+ "パーティクル生成の周期"})
-    	public static int PARTICLECYCLETICK = 8;
+    	public static int PARTICLECYCLETICK = 16;
     	public static MSGTEXT MSG = new MSGTEXT();
     	public static class MSGTEXT {
     		@Comment({"スキル有効時のメッセージ"})
@@ -54,6 +59,22 @@ public class Senryu
     	}
     }
 
+    public static EntityPlayerSP getPlayer() {
+    	return player;
+    }
+    
+    public static World getWorld() {
+    	return world;
+    }
+    
+    public static void reloadPlayer() {
+    	player = Minecraft.getMinecraft().player;
+    }
+    
+    public static void reloadWorld() {
+    	world = Minecraft.getMinecraft().world;
+    }
+    
     //初期化など
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -65,10 +86,22 @@ public class Senryu
 
     //Tick毎の処理
     @SubscribeEvent
-    public static void onTicked(WorldTickEvent event) {
+    public static void onTicked(ClientTickEvent event) {
     		if(tickCount >= CONFIG.PARTICLECYCLETICK) {
     			tickCount = 0;
-    			if(BuildSkills.isEnable())prtMng.drawParticle();
+    			if(BuildSkills.isEnable()) {
+    				reloadPlayer();
+    				reloadWorld();
+        	    	if(Objects.isNull(player)) {//ぬるぽ回避
+        	    		return;
+        	    	}
+        	    	else if(Objects.isNull(world)) {//ぬるぽ回避
+        	    		return;
+        	    	}
+        	    	else {
+        	    		prtMng.drawParticle();
+        	    	}
+    			}
     		}
     		else {
     			tickCount++;
@@ -79,7 +112,6 @@ public class Senryu
     @SubscribeEvent
     public static void getChatMessage(ClientChatReceivedEvent event)  {
     	String chatMsg = new String(event.getMessage().getUnformattedText());
-    	System.out.println(event.getMessage().getUnformattedComponentText());
     	if(chatMsg.equals(CONFIG.MSG.ONDISABLESKILL)) {
     		BuildSkills.setModeDisable();
     	}
@@ -92,20 +124,5 @@ public class Senryu
     	if(chatMsg.equals("deb")) {
     		logger.info("MODE is {}", BuildSkills.getModes());
     	}
-    }
-
-    @SubscribeEvent
-    public static void onWorldMoved(PlayerChangedDimensionEvent event) {
-    	prtMng.resetWorld();
-    }
-
-    @SubscribeEvent
-    public static void onLoggedIn (PlayerLoggedOutEvent event) {
-    	prtMng.resetWorld();
-    }
-
-    @SubscribeEvent
-    public static void onLoggedOut(PlayerLoggedInEvent  event) {
-    	prtMng.resetWorld();
     }
 }
