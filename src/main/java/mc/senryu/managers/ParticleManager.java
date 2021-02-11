@@ -8,7 +8,6 @@ import mc.senryu.BuildSkills;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
@@ -19,7 +18,7 @@ public class ParticleManager {
 	private static World world;
 	private static EntityPlayerSP player;
 
-	private static ItemStack stick = new ItemStack(Item.getItemById(280/*棒*/));
+	private static Item stick = Item.getItemById(280);
 
 	private double px;
 	private double py;
@@ -28,6 +27,10 @@ public class ParticleManager {
 	public ParticleManager() {
 		world = Minecraft.getMinecraft().world;
 		player = Minecraft.getMinecraft().player;
+	}
+
+	public void resetWorld() {
+		world = null;
 	}
 
 	//#defineみたいなのってJavaにはないの...?
@@ -39,13 +42,15 @@ public class ParticleManager {
 
     //描画処理
     public void drawParticle() {
-    	if(Objects.isNull(player)) {//ぬるぽ回避
+    	if(Objects.isNull(player)) {//ぬるぽ回避※これdrawparticleの範疇超えてない..?
     		player = Minecraft.getMinecraft().player;
+    		return;
     	}
     	else if(Objects.isNull(world)) {//ぬるぽ回避
     		world = Minecraft.getMinecraft().world;
+    		return;
     	}
-    	else if(player.getHeldItemOffhand().equals(stick)) {
+    	else if (player.getHeldItemOffhand().getItem().equals(stick)) {
     		byte Yaw = (byte)((int)(Math.floor((player.rotationYaw / 90.0D) + 0.5D)) & 3);
     		px = ((Math.round((player.posX)-0.5D))+0.5D);//n+0.5の形にする
     		py = Math.round(player.posY + 1.6F) - 0.5D;//この+1.6はBuildAssistより

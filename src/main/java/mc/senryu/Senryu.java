@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 @Mod(modid = Senryu.MODID, name = Senryu.NAME, version = Senryu.VERSION)
@@ -20,11 +23,19 @@ public class Senryu
 {
     public static final String MODID = "senryu";
     public static final String NAME = "Senryu-Mod";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "0.1-beta";
 
     private static Logger logger;
     private static byte tickCount;
     private static ParticleManager prtMng;
+
+    //デバッグ用コマンド
+    // /tellraw @p {"text": "ブロックを並べるスキル(仮): OFF", "color": "green"}
+    // /tellraw @p {"text": "ブロックを並べるスキル(仮): 上側", "color": "green"}
+    // /tellraw @p {"text": "ブロックを並べるスキル(仮): 下側", "color": "green"}
+    // /tellraw @p {"text": "deb", "color": "green"}
+
+
 
     @Config(modid = MODID, type = Type.INSTANCE, name = "SenryuConfig")
     public static class CONFIG {
@@ -68,6 +79,7 @@ public class Senryu
     @SubscribeEvent
     public static void getChatMessage(ClientChatReceivedEvent event)  {
     	String chatMsg = new String(event.getMessage().getUnformattedText());
+    	System.out.println(event.getMessage().getUnformattedComponentText());
     	if(chatMsg.equals(CONFIG.MSG.ONDISABLESKILL)) {
     		BuildSkills.setModeDisable();
     	}
@@ -80,5 +92,20 @@ public class Senryu
     	if(chatMsg.equals("deb")) {
     		logger.info("MODE is {}", BuildSkills.getModes());
     	}
+    }
+
+    @SubscribeEvent
+    public static void onWorldMoved(PlayerChangedDimensionEvent event) {
+    	prtMng.resetWorld();
+    }
+
+    @SubscribeEvent
+    public static void onLoggedIn (PlayerLoggedOutEvent event) {
+    	prtMng.resetWorld();
+    }
+
+    @SubscribeEvent
+    public static void onLoggedOut(PlayerLoggedInEvent  event) {
+    	prtMng.resetWorld();
     }
 }
