@@ -1,0 +1,16 @@
+[
+{
+  "modid": "senryu",
+  "name": "Senryu-Mod",
+  "description": "Gigantic☆整地鯖の便利な機能を追加するModです。",
+  "version": "0.1-beta",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/506qqq/mcMod.java",
+  "updateUrl": "",
+  "authorList": ["sobaaa"],
+  "credits": "??",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
