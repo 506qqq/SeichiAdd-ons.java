@@ -1,9 +1,10 @@
-package mc.senryu.managers;
+package mc.saddons.particle;
 
 import org.apache.logging.log4j.Logger;
 
-import mc.senryu.BuildSkills;
-import mc.senryu.Senryu;
+import mc.saddons.stat.BuildSkills;
+import mc.saddons.stat.Players;
+import mc.saddons.stat.Worlds;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
@@ -35,14 +36,14 @@ public class ParticleManager {
 
     //描画処理
     public void drawParticle() {
-    	System.out.println("Fire");
-    	player = Senryu.getPlayer();
-    	world = Senryu.getWorld();
+    	player = Players.getStat();
+    	world = Worlds.getStat();
     	if (player.getHeldItemOffhand().getItem().equals(stick)) {
     		byte Yaw = (byte)((int)(Math.floor((player.rotationYaw / 90.0D) + 0.5D)) & 3);
     		px = ((Math.round((player.posX)-0.5D))+0.5D);//n+0.5の形にする
-    		py = Math.round(player.posY + 1.6F) - 0.5D;//この+1.6はBuildAssistより
+    		py = Math.floor(player.posY+1.6D)+0.5D;//この+1.6はBuildAssistより
     		pz = ((Math.round((player.posZ)-0.5D))+0.5D);//n+0.5の形にする
+    		System.out.println(player.posY);
     		switch(Yaw) {
     		case DirSouth:
     			pz+=2.0D;

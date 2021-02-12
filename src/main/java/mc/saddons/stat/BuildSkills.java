@@ -1,4 +1,4 @@
-package mc.senryu;
+package mc.saddons.stat;
 
 //建築スキル判定系
 public class BuildSkills {

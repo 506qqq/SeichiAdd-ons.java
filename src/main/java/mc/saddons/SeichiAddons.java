@@ -1,13 +1,13 @@
-package mc.senryu;
+package mc.saddons;
 
 import java.util.Objects;
 
 import org.apache.logging.log4j.Logger;
 
-import mc.senryu.managers.ParticleManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.world.World;
+import mc.saddons.particle.ParticleManager;
+import mc.saddons.stat.BuildSkills;
+import mc.saddons.stat.Players;
+import mc.saddons.stat.Worlds;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
@@ -19,32 +19,22 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-@Mod(modid = Senryu.MODID, name = Senryu.NAME, version = Senryu.VERSION)
+@Mod(modid = SeichiAddons.MODID, name = SeichiAddons.NAME, version = SeichiAddons.VERSION)
 @EventBusSubscriber
-public class Senryu
+public class SeichiAddons
 {
-    public static final String MODID = "senryu";
-    public static final String NAME = "Senryu-Mod";
-    public static final String VERSION = "0.1-beta";
+    public static final String MODID = "saddons";
+    public static final String NAME = "SeichiAdd-ons";
+    public static final String VERSION = "0.1a";
 
-	private static World world;
-	private static EntityPlayerSP player;
-	
     private static Logger logger;
     private static byte tickCount;
     private static ParticleManager prtMng;
 
-    //デバッグ用コマンド
-    // /tellraw @p {"text": "ブロックを並べるスキル(仮): OFF", "color": "green"}
-    // /tellraw @p {"text": "ブロックを並べるスキル(仮): 上側", "color": "green"}
-    // /tellraw @p {"text": "ブロックを並べるスキル(仮): 下側", "color": "green"}
-    // /tellraw @p {"text": "deb", "color": "green"}
-
-
-
-    @Config(modid = MODID, type = Type.INSTANCE, name = "SenryuConfig")
+    @Config(modid = MODID, type = Type.INSTANCE, name = "SeichiAdd-ons")
     public static class CONFIG {
-    	@Comment({"*****************************************\n"
+    	@Comment({"\n"
+    			+ "*****************************************\n"
     			+ "ファイル削除で元のファイルが生成されます。\n"
     			+ "*****************************************\n"
     			+ "\n"
@@ -58,21 +48,12 @@ public class Senryu
     		public String ONLOWERSKILL = "ブロックを並べるスキル(仮): 下側";
     	}
     }
-
-    public static EntityPlayerSP getPlayer() {
-    	return player;
-    }
     
-    public static World getWorld() {
-    	return world;
-    }
-    
-    public static void reloadPlayer() {
-    	player = Minecraft.getMinecraft().player;
-    }
-    
-    public static void reloadWorld() {
-    	world = Minecraft.getMinecraft().world;
+    //リセット
+    public static void resetStat() {
+    	Worlds.unloadStat();
+    	Players.unloadStat();
+    	BuildSkills.setModeDisable();
     }
     
     //初期化など
@@ -90,12 +71,13 @@ public class Senryu
     		if(tickCount >= CONFIG.PARTICLECYCLETICK) {
     			tickCount = 0;
     			if(BuildSkills.isEnable()) {
-    				reloadPlayer();
-    				reloadWorld();
-        	    	if(Objects.isNull(player)) {//ぬるぽ回避
+    				Players.reloadStat();
+    				Worlds.reloadStat();
+        	    	if(Objects.isNull(Worlds.getStat())) {//ぬるぽ回避
+        	    		resetStat();
         	    		return;
         	    	}
-        	    	else if(Objects.isNull(world)) {//ぬるぽ回避
+        	    	else if(Objects.isNull(Players.getStat())) {//ぬるぽ回避
         	    		return;
         	    	}
         	    	else {
