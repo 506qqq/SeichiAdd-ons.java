@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class ParticleManager {
 	Logger logger;
 
-	private static Item stick = Item.getItemById(280);
+	private static final Item stick = Item.getItemById(280);
 
 	private double px;
 	private double py;
@@ -23,16 +23,11 @@ public class ParticleManager {
 	EntityPlayerSP player;
 	World world;
 
-	public void resetWorld() {
-		return;
-	}
-
 	//#defineみたいなのってJavaにはないの...?
     public final byte DirSouth = 0;
     public final byte DirWest = 1;
     public final byte DirNorth = 2;
     public final byte DirEast = 3;
-
 
     //描画処理
     public void drawParticle() {
@@ -40,26 +35,34 @@ public class ParticleManager {
     	world = Worlds.getStat();
     	if (player.getHeldItemOffhand().getItem().equals(stick)) {
     		byte Yaw = (byte)((int)(Math.floor((player.rotationYaw / 90.0D) + 0.5D)) & 3);
+    		float pitch = player.rotationPitch;
     		px = ((Math.round((player.posX)-0.5D))+0.5D);//n+0.5の形にする
-    		py = Math.floor(player.posY+1.6D)+0.5D;//この+1.6はBuildAssistより
+    		py = Math.floor(player.posY+1.6D)+0.5D;//+1.6はBuildAssistより
     		pz = ((Math.round((player.posZ)-0.5D))+0.5D);//n+0.5の形にする
-    		System.out.println(player.posY);
-    		switch(Yaw) {
-    		case DirSouth:
-    			pz+=2.0D;
-    			break;
-    		case DirWest:
-    			px-=2.0D;
-    			break;
-    		case DirNorth:
-    			pz-=2.0D;
-    			break;
-    		case DirEast:
-    			px+=2.0D;
-    			break;
+    		if(pitch > 45.0f) {
+    			this.showGrid(px, py-2, pz);
     		}
-    		if(BuildSkills.isLower()) py -= 1.0;
-    		this.showGrid(px, py, pz);
+    		else if(pitch < -45.0f) {
+    			this.showGrid(px, py+2, pz);
+    		}
+    		else {
+    			switch(Yaw) {
+    				case DirSouth:
+    					pz+=2.0D;
+    					break;
+    				case DirWest:
+    					px-=2.0D;
+    					break;
+    				case DirNorth:
+    					pz-=2.0D;
+    					break;
+    				case DirEast:
+    					px+=2.0D;
+    					break;
+    			}
+        		if(BuildSkills.isLower()) py -= 1.0;
+        		this.showGrid(px, py, pz);
+    		}
     	}
      }
 
