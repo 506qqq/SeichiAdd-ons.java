@@ -14,35 +14,32 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 public class LinkCommand implements ICommand {
-	
+
 	private final List<String> aliases = new ArrayList<String>();
 	private final String[] keywords;
 	private final String[] Links;
 	private final String[] Descriptions;
+
+	private List<Integer> matchResult = new ArrayList<>();
+
 	GuiScreen GUI;
-	
+
 	public LinkCommand() {
 		keywords = CONFIG.LINKS.KEYWORDS;
 		Links = CONFIG.LINKS.URLS;
 		Descriptions = CONFIG.LINKS.DESCS;
+		matchResult.clear();
 		for(String alias: CONFIG.LINKS.COMMAND_ALIASES) {
 			aliases.add(alias);
 		}
 	}
-	
-	public String getName() {
-		return "link";
-	}
-	
-	public String getUsage(ICommandSender sender) {
-		return "/link [keywords]";
-	}
-	
+
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
 			showUsage();
 		}
 		else if(args.length == 1) {
+			matchResult.clear();
 			boolean hasResultFound = false;
 			String arg = args[0];
 			String keyword;
@@ -55,11 +52,16 @@ public class LinkCommand implements ICommand {
 					keyword = keyword.substring(0, arg.length());
 				}
 				if(arg.equals(keyword)) {
-					showLink(Links[i], Descriptions[i]);
+					matchResult.add(i);
 					hasResultFound = true;
 				}
 			}
-			if(!hasResultFound) {
+			if(hasResultFound) {
+				showMessage(String.format(CONFIG.LINKS.MESSAGE_BEGINSHOWRESULT, arg));
+				matchResult.forEach((i) -> showLink(Links[i], Descriptions[i]));
+				showMessage(CONFIG.LINKS.MESSAGE_FINISHSHOWRESULT);
+			} 
+			else { 
 				showMessage(CONFIG.LINKS.MESSAGE_NOTFOUNDRESULT);
 			}
 		}
@@ -67,11 +69,19 @@ public class LinkCommand implements ICommand {
 			showMessage("Error");
 		}
 	}
-	
-	public void showUsage() {
-		showMessage("対応してるやつ:hp, vote, votejp, voteorg, buildhp, rule");
+
+	public String getName() {
+		return CONFIG.LINKS.NAME;
+	}
+
+	public String getUsage(ICommandSender sender) {
+		return CONFIG.LINKS.USAGE;
 	}
 	
+	public void showUsage() {
+		showMessage(CONFIG.LINKS.MESSAGE_HELP);
+	}
+
 	public void showMessage(String Msg) {
 		TextComponentString Str = new TextComponentString(Msg);
 		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(Str);
@@ -82,7 +92,7 @@ public class LinkCommand implements ICommand {
 		Str.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Url));
 		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(Str);
 	}
-	
+
 	@Override
 	public int compareTo(ICommand o) {
 		return 0;
