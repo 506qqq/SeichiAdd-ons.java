@@ -1,10 +1,11 @@
-package mc.saddons.particle;
+package mc.seichiaddons.particle;
 
 import org.apache.logging.log4j.Logger;
 
-import mc.saddons.stat.BuildSkills;
-import mc.saddons.stat.Players;
-import mc.saddons.stat.Worlds;
+import mc.seichiaddons.CONFIG;
+import mc.seichiaddons.stat.BuildSkills;
+import mc.seichiaddons.stat.Players;
+import mc.seichiaddons.stat.Worlds;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
@@ -14,7 +15,7 @@ import net.minecraft.world.World;
 public class ParticleManager {
 	Logger logger;
 
-	private static final Item stick = Item.getItemById(280);
+	private static final Item stick = Item.getItemById(CONFIG.stickItemID);
 
 	private double px;
 	private double py;
@@ -23,7 +24,6 @@ public class ParticleManager {
 	EntityPlayerSP player;
 	World world;
 
-	//#defineみたいなのってJavaにはないの...?
     public final byte DirSouth = 0;
     public final byte DirWest = 1;
     public final byte DirNorth = 2;

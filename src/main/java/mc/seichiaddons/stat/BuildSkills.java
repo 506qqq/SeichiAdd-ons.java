@@ -1,4 +1,4 @@
-package mc.saddons.stat;
+package mc.seichiaddons.stat;
 
 //建築スキル判定系
 public class BuildSkills {

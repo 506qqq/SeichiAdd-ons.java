@@ -1,4 +1,4 @@
-package mc.saddons.stat;
+package mc.seichiaddons.stat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
