@@ -3,10 +3,11 @@ package mc.seichiaddons;
 import java.util.Objects;
 
 import mc.seichiaddons.commands.LinkCommand;
-import mc.seichiaddons.particle.ParticleManager;
-import mc.seichiaddons.stat.BuildSkills;
-import mc.seichiaddons.stat.Players;
-import mc.seichiaddons.stat.Worlds;
+import mc.seichiaddons.particle.ParticleDrawer;
+import mc.seichiaddons.stat.BuildSkill;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,64 +25,69 @@ public class SeichiAddons
     public static final String NAME = "SeichiAdd-ons";
     public static final String VERSION = "0.2";
 
+    private static int particleDrawCycle;
     private static byte tickCount;
-    private static ParticleManager prtMng;
-    
-    
+    private static ParticleDrawer particleDrawer;
+    private static BuildSkill buildSkill;
+
+    private static EntityPlayerSP player;
+    private static World world;
+
     //リセット
-    public static void resetStat() {
-    	Worlds.reloadStat();
-    	Players.reloadStat();
+    private static void resetStat() {
+    	player = Minecraft.getMinecraft().player;
+    	world = Minecraft.getMinecraft().world;
+    	tickCount = 0;
     }
-    
+
     //初期化など
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        tickCount = 0;
-        prtMng = new ParticleManager();
+        particleDrawer = new ParticleDrawer();
+        buildSkill = new BuildSkill();
+        particleDrawCycle = CONFIG.PARTICLECYCLETICK;
         ClientCommandHandler.instance.registerCommand(new LinkCommand());
-        
-    }
-    
-    
-    //Tick毎の処理
-    @SubscribeEvent
-    public static void onTicked(ClientTickEvent event) {
-    		if(tickCount >= CONFIG.PARTICLECYCLETICK) {
-    			tickCount = 0;
-    			if(BuildSkills.isEnable()) {
-    				resetStat();
-        	    	if(Objects.isNull(Worlds.getStat())) {//ぬるぽ回避
-        	    		BuildSkills.setModeDisable();
-        	    		return;
-        	    	}
-        	    	else if(Objects.isNull(Players.getStat())) {//ぬるぽ回避
-        	    		return;
-        	    	}
-        	    	else {
-        	    		resetStat();
-        	    		prtMng.drawParticle();
-        	    	}
-    			}
-    		}
-    		else {
-    			tickCount++;
-    		}
+        resetStat();
     }
 
-    //チャット受信時の処理
+    @SubscribeEvent
+    public static void onTicked(ClientTickEvent event) {
+    	if(tickCount <= particleDrawCycle) {
+    		tickCount++;
+    		return;
+    	}
+    	if(buildSkill.isEnable()) {
+    		resetStat();
+           	if(Objects.isNull(world)) {//ぬるぽ回避
+           		buildSkill.setModeDisable();
+           		return;
+           	}
+           	if(Objects.isNull(player)) {//ぬるぽ回避
+           		return;
+           	}
+           	buildSkill.drawParticle(particleDrawer, player, world);
+    	}
+    }
+
     @SubscribeEvent
     public static void getChatMessage(ClientChatReceivedEvent event)  {
-    	String chatMsg = new String(event.getMessage().getUnformattedText());
-    	if(chatMsg.equals(CONFIG.MSG.ONDISABLESKILL)) {
-    		BuildSkills.setModeDisable();
+    	String receivedMsg = new String(event.getMessage().getUnformattedText());
+    	if(receivedMsg.equals(buildSkill.getServerMsgOnDisable())) {
+    		buildSkill.setModeDisable();
+    		return;
     	}
-    	if(chatMsg.equals(CONFIG.MSG.ONUPPERSKILL)) {
-    		BuildSkills.setModeUpper();
+    	if(receivedMsg.equals(buildSkill.getServerMsgOnUpper())) {
+    		buildSkill.setModeUpper();
+    		return;
     	}
-    	if(chatMsg.equals(CONFIG.MSG.ONLOWERSKILL)) {
-    		BuildSkills.setModeLower();
+    	if(receivedMsg.equals(buildSkill.getServerMsgOnLower())) {
+    		buildSkill.setModeLower();
+    		return;
+    	}
+    	if(receivedMsg.equals("deb")) {
+    		System.out.println(buildSkill.getModes());
+    		return;
     	}
     }
 }
