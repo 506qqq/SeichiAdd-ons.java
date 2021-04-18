@@ -3,8 +3,7 @@ package mc.seichiaddons;
 import java.util.Objects;
 
 import mc.seichiaddons.commands.LinkCommand;
-import mc.seichiaddons.particle.ParticleDrawer;
-import mc.seichiaddons.stat.BuildSkill;
+import mc.seichiaddons.stat.BuildSkillDrawer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.World;
@@ -25,10 +24,14 @@ public class SeichiAddons
     public static final String NAME = "SeichiAdd-ons";
     public static final String VERSION = "0.2";
 
+	public static final byte DirSouth = 0;
+    public static final byte DirWest = 1;
+    public static final byte DirNorth = 2;
+    public static final byte DirEast = 3;
+
     private static int particleDrawCycle;
     private static byte tickCount;
-    private static ParticleDrawer particleDrawer;
-    private static BuildSkill buildSkill;
+    private static BuildSkillDrawer buildSkill;
 
     private static EntityPlayerSP player;
     private static World world;
@@ -44,8 +47,7 @@ public class SeichiAddons
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        particleDrawer = new ParticleDrawer();
-        buildSkill = new BuildSkill();
+        buildSkill = new BuildSkillDrawer();
         particleDrawCycle = CONFIG.PARTICLECYCLETICK;
         ClientCommandHandler.instance.registerCommand(new LinkCommand());
         resetStat();
@@ -59,14 +61,14 @@ public class SeichiAddons
     	}
     	if(buildSkill.isEnable()) {
     		resetStat();
-           	if(Objects.isNull(world)) {//ぬるぽ回避
+           	if(Objects.isNull(world)) {
            		buildSkill.setModeDisable();
            		return;
            	}
-           	if(Objects.isNull(player)) {//ぬるぽ回避
+           	if(Objects.isNull(player)) {
            		return;
            	}
-           	buildSkill.drawParticle(particleDrawer, player, world);
+           	buildSkill.drawParticle(player, world);
     	}
     }
 
@@ -83,10 +85,6 @@ public class SeichiAddons
     	}
     	if(receivedMsg.equals(buildSkill.getServerMsgOnLower())) {
     		buildSkill.setModeLower();
-    		return;
-    	}
-    	if(receivedMsg.equals("deb")) {
-    		System.out.println(buildSkill.getModes());
     		return;
     	}
     }
