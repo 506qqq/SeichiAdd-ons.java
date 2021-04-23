@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public interface ParticleInterface {
 	void drawParticle(EntityPlayerSP player, World world);
-    default void drawBlockBorder(World w, EnumParticleTypes p, double x, double y, double z) {
-    	w.spawnParticle(p, x, y, z, 0, 0, 0);
-    }
+	   default void drawUnitParticle(World w, EnumParticleTypes p, double x, double y, double z) {
+	    	w.spawnParticle(p, x, y, z, 0, 0, 0);
+	    }
 }

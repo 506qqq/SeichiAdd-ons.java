@@ -54,7 +54,34 @@ public class BuildSkillDrawer extends BuildSkill implements ParticleInterface {
     		}
     	}
         if(this.isLower()) pY -= 1.0;
-        this.drawBlockBorder(world, particleType, pX, pY, pZ);
+        this.drawOneBlockGrid(pX, pY, pZ, world);
         return;
+	}
+	
+	void drawUnitParticle(World w, double pX, double pY, double pZ) {
+		w.spawnParticle(particleType, pX, pY, pZ, 0, 0, 0);
+	}
+	
+	public void drawOneBlockGrid(double x, double y, double z, World w) {
+       	for(int bit = 0; (bit&(1<<3)) == 0; bit++) {
+       		drawUnitParticle(w, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
+      			(bit&(1<<1)) == 0? y-0.5D: y+0.5D,
+      			(bit&(1<<2)) == 0? z-0.5D: z+0.5D);
+       	}
+        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
+        	drawUnitParticle(w, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
+        		(bit&(1<<1)) == 0? y-0.5D: y+0.5D,
+        		z);
+        }
+        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
+        	drawUnitParticle(w, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
+        		y,
+        		(bit&(1<<1)) == 0? z-0.5D: z+0.5D);
+        }
+        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
+        	drawUnitParticle(w, x,
+        		(bit&(1<<0)) == 0? y-0.5D: y+0.5D,
+        		(bit&(1<<1)) == 0? z-0.5D: z+0.5D);
+        }
 	}
 }
