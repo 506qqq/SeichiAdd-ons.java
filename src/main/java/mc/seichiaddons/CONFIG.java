@@ -17,6 +17,11 @@ public class CONFIG {
 	public static int PARTICLECYCLETICK = 16;
 	public static MSGTEXT MSG = new MSGTEXT();
 	public static LINKTXT LINKS = new LINKTXT();
+	public static String[] seichiSkillName = {"エクス", "ミラージュ", "ドッカーン", "ボム", "レムリア",
+												 "エタ", "ホワイト" ,"ゼロ", "ダイヤモンド", "アサルト"};
+	public static int[] seichiSkillBreakRangeX = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
+	public static int[] seichiSkillBreakRangeY = {3, 3, 5, 7, 9, 11, 7, 11, 15, 11};
+	public static int[] seichiSkillBreakRangeZ = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
 	public static class MSGTEXT {
 		@Comment({"スキル有効時のメッセージ"})
 		public String ONDISABLESKILL = "直列設置: OFF";
@@ -28,7 +33,7 @@ public class CONFIG {
 		public String USAGE = "/link [keywords]";
 		public String MESSAGE_HELP = "対応表はDiscordの<#ないぶてきなしよう>にて";
 		public String[] COMMAND_ALIASES = {"url", "urls", "li"};
-		public String[] KEYWORDS = {"hp", "rule", "map", "seichi", "build", 
+		public String[] KEYWORDS = {"hp", "rule", "map", "seichi", "build",
 				"public", "command", "qanda", "form", "discord", "youtube", "twitter",
 				"reportform", "formreport", "tuuhou", "24", "huguai", "formhuguai", "bug",
 				"goiken", "formgoiken", "iken", "aidea", "idea", "formidea",
@@ -38,10 +43,10 @@ public class CONFIG {
 				"votejp", "jp", "voteorg", "org"
 				};
 		public String[] URLS = {
-				"https://www.seichi.network/gigantic", 
-				"https://www.seichi.network/rule", 
-				"https://www.seichi.network/map", 
-				"https://www.seichi.network/seichi", 
+				"https://www.seichi.network/gigantic",
+				"https://www.seichi.network/rule",
+				"https://www.seichi.network/map",
+				"https://www.seichi.network/seichi",
 				"https://www.seichi.network/build",
 				"https://www.seichi.network/public",
 				"https://www.seichi.network/command",
@@ -131,4 +136,5 @@ public class CONFIG {
 		public String MESSAGE_FINISHSHOWRESULT = "§l------------------------";
 		public String MESSAGE_NOTFOUNDRESULT = "見つかりませんでした";
 	}
+
 }
