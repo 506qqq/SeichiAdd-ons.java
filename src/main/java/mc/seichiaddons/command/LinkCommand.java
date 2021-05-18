@@ -1,9 +1,9 @@
-package mc.seichiaddons.commands;
+package mc.seichiaddons.command;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import mc.seichiaddons.CONFIG;
+import mc.seichiaddons.resource.CONFIG;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.command.ICommand;

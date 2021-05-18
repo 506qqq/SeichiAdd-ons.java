@@ -2,10 +2,14 @@ package mc.seichiaddons;
 
 import java.util.Objects;
 
-import mc.seichiaddons.commands.LinkCommand;
-import mc.seichiaddons.stat.BuildSkillDrawer;
+import mc.seichiaddons.command.LinkCommand;
+import mc.seichiaddons.resource.CONFIG;
+import mc.seichiaddons.skill.BuildSkill;
+import mc.seichiaddons.skill.particle.BuildSkillDrawer;
+import mc.seichiaddons.skill.particle.SeichiSkillDrawer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -24,30 +28,27 @@ public class SeichiAddons
     public static final String NAME = "SeichiAdd-ons";
     public static final String VERSION = "0.2";
 
-	public static final byte DirSouth = 0;
-    public static final byte DirWest = 1;
-    public static final byte DirNorth = 2;
-    public static final byte DirEast = 3;
-
     private static int particleDrawCycle;
     private static byte tickCount;
+
     private static BuildSkillDrawer buildSkill;
+    private static SeichiSkillDrawer seichiSkill;
 
     private static EntityPlayerSP player;
     private static World world;
 
-    //リセット
+
     private static void resetStat() {
     	player = Minecraft.getMinecraft().player;
     	world = Minecraft.getMinecraft().world;
     	tickCount = 0;
     }
 
-    //初期化など
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        buildSkill = new BuildSkillDrawer();
+        buildSkill = new BuildSkillDrawer(player, world);
         particleDrawCycle = CONFIG.PARTICLECYCLETICK;
         ClientCommandHandler.instance.registerCommand(new LinkCommand());
         resetStat();
@@ -59,32 +60,32 @@ public class SeichiAddons
     		tickCount++;
     		return;
     	}
-    	if(buildSkill.isEnable()) {
+    	if(buildSkill.skillState.isEnable()) {
     		resetStat();
            	if(Objects.isNull(world)) {
-           		buildSkill.setModeDisable();
+           		buildSkill.skillState.setModeDisable();
            		return;
            	}
            	if(Objects.isNull(player)) {
            		return;
            	}
-           	buildSkill.drawParticle(player, world);
+           	buildSkill.drawParticle(EnumParticleTypes.REDSTONE);
     	}
     }
 
     @SubscribeEvent
     public static void getChatMessage(ClientChatReceivedEvent event)  {
     	String receivedMsg = new String(event.getMessage().getUnformattedText());
-    	if(receivedMsg.equals(buildSkill.getServerMsgOnDisable())) {
-    		buildSkill.setModeDisable();
+    	if(receivedMsg.equals(BuildSkill.getServerMsgOnDisable())) {
+    		buildSkill.skillState.setModeDisable();
     		return;
     	}
-    	if(receivedMsg.equals(buildSkill.getServerMsgOnUpper())) {
-    		buildSkill.setModeUpper();
+    	if(receivedMsg.equals(BuildSkill.getServerMsgOnUpper())) {
+    		buildSkill.skillState.setModeUpper();
     		return;
     	}
-    	if(receivedMsg.equals(buildSkill.getServerMsgOnLower())) {
-    		buildSkill.setModeLower();
+    	if(receivedMsg.equals(BuildSkill.getServerMsgOnLower())) {
+    		buildSkill.skillState.setModeLower();
     		return;
     	}
     }

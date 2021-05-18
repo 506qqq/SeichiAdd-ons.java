@@ -1,5 +1,6 @@
-package mc.seichiaddons;
+package mc.seichiaddons.resource;
 
+import mc.seichiaddons.SeichiAddons;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Type;
@@ -22,6 +23,8 @@ public class CONFIG {
 	public static int[] seichiSkillBreakRangeX = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
 	public static int[] seichiSkillBreakRangeY = {3, 3, 5, 7, 9, 11, 7, 11, 15, 11};
 	public static int[] seichiSkillBreakRangeZ = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
+	public static int[] seichiSkill_IsAssault = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1};
+	public static int[] seichiSkill_IsFluid = {0, 0, 0, 0, 0, 0, 1, 1, 1, 0};
 	public static class MSGTEXT {
 		@Comment({"スキル有効時のメッセージ"})
 		public String ONDISABLESKILL = "直列設置: OFF";
