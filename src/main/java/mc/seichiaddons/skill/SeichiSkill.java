@@ -33,10 +33,10 @@ public class SeichiSkill{
 		return breakRangeX / 2;
 	}
 	public int breakBACK() {
-		return breakRangeZ;
+		return 0;
 	}
 	public int breakFRONT() {
-		return 0;
+		return breakRangeZ;
 	}
 
 }

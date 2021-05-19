@@ -19,10 +19,16 @@ public class SeichiSkillStateContainer {
 		this.loadConfig();
 	}
 
+	public void setModeDisable() {
+		this.currentAssault = null;
+		this.currentStagna = null;
+	}
+	
 	public void setSkillByChatMsg(String chatMsg) {
 		for(SeichiSkill s: stagnaList) {
 			if(s.chatMsgOnEnable().equals(chatMsg)) {
 				currentStagna = s;
+				System.out.println("おんになったよーーー！");
 			}
 			if(s.chatMsgOnDisable().equals(chatMsg)) {
 				currentAssault = null;
