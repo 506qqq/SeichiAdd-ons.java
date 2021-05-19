@@ -12,6 +12,7 @@ public class SeichiSkillDrawer extends ParticleDrawer {
 
 	public SeichiSkillDrawer(EntityPlayerSP p, World w) {
 		super(p, w);
+		this.skillState = new SeichiSkillStateContainer();
 	}
 
 	@Override

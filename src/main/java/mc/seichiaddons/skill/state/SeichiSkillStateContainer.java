@@ -1,5 +1,6 @@
 package mc.seichiaddons.skill.state;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mc.seichiaddons.resource.CONFIG;
@@ -15,13 +16,17 @@ public class SeichiSkillStateContainer {
 	public SeichiSkill currentStagna;
 	public AssaultSkill currentAssault;
 
-	void SeichiSKillStateContainer() {
+	public SeichiSkillStateContainer() {
+		stagnaList = new ArrayList<>();
+		assaultList = new ArrayList<>();
+		currentStagna = new SeichiSkill();
+		currentAssault = new AssaultSkill();
 		this.loadConfig();
 	}
 
 	public void setModeDisable() {
-		this.currentAssault = null;
-		this.currentStagna = null;
+		currentStagna = new SeichiSkill();
+		currentAssault = new AssaultSkill();
 	}
 	
 	public void setSkillByChatMsg(String chatMsg) {
@@ -51,12 +56,15 @@ public class SeichiSkillStateContainer {
 		int[] sRangeZ = CONFIG.seichiSkillBreakRangeZ;
 		int[] s_isAssault = CONFIG.seichiSkill_IsAssault;
 		int[] s_isFluid = CONFIG.seichiSkill_IsFluid;
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n");
+		System.out.println(sName.length);
 		for(int i = 0; i < sName.length; i++) {
 			if(s_isAssault[i] != 1) stagnaList.add(new SeichiSkill(
 					sName[i], sRangeX[i], sRangeY[i], sRangeZ[i]));
 			else assaultList.add(new AssaultSkill(
 					sName[i], sRangeX[i], sRangeY[i], sRangeZ[i],
 					(s_isFluid[i] == 1)?true:false));
+			System.out.println("Called");
 		}
 
 	}

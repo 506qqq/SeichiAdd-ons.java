@@ -6,6 +6,11 @@ public class AssaultSkill extends SeichiSkill {
 		super(name, X, Y, Z);
 		this.isFluid = b;
 	}
+	
+	public AssaultSkill() {
+		super();
+		this.isFluid = false;
+	}
 
 	@Override
 	public int breakUP() {

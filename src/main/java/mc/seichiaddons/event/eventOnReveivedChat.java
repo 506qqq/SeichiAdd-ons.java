@@ -23,11 +23,6 @@ public class eventOnReveivedChat {
     		SeichiAddons.buildSkill.skillState.setModeLower();
     		return;
     	}
-    	if(receivedMsg.matches(": ON$")) {
-    		SeichiAddons.seichiSkill.skillState.setSkillByChatMsg(receivedMsg);
-    	}
-    	if(receivedMsg.matches(": OFF$")) {
-    		SeichiAddons.seichiSkill.skillState.setSkillByChatMsg(receivedMsg);
-    	}
+    	SeichiAddons.seichiSkill.skillState.setSkillByChatMsg(receivedMsg);
     }
 }

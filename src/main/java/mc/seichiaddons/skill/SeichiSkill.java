@@ -10,6 +10,14 @@ public class SeichiSkill{
 		breakRangeX = X;
 		breakRangeY = Y;
 		breakRangeZ = Z;
+		
+	}
+	
+	public SeichiSkill() {
+		skillName = null;
+		breakRangeX = 0;
+		breakRangeY = 0;
+		breakRangeZ = 0;
 	}
 	public boolean isNotNull() {
 		return this != null;

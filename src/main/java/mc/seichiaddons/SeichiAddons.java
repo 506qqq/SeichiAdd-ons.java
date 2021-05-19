@@ -8,10 +8,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-@Mod(modid = SeichiAddons.MODID)
+@Mod(modid = "seichiaddons", version = "0.2", name = "SeichiAdd-ons")
+@EventBusSubscriber
 public class SeichiAddons {
     public static final String MODID = "seichiaddons";
     public static final String NAME = "SeichiAdd-ons";
@@ -29,7 +31,7 @@ public class SeichiAddons {
     }
     
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+    public void init(FMLInitializationEvent event)
     {
         buildSkill = new BuildSkillDrawer(player, world);
         seichiSkill = new SeichiSkillDrawer(player, world);
