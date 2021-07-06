@@ -1,18 +1,10 @@
 package mc.seichiaddons.skill.particle;
 
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
 
 
 abstract class ParticleDrawer {
-	protected EntityPlayerSP p;
-	protected World w;
-	
-	ParticleDrawer(EntityPlayerSP player, World world) {
-		this.p = player;
-		this.w = world;
-	}
 	
 	protected enum Axis {
 		X, Y, Z
@@ -21,7 +13,7 @@ abstract class ParticleDrawer {
 	abstract void drawParticle(EnumParticleTypes pt);
 	
 	protected void drawUnitParticle(EnumParticleTypes pt, double x, double y, double z) {
-	   	w.spawnParticle(pt, x, y, z, 0, 0, 0);
+	   	Minecraft.getMinecraft().world.spawnParticle(pt, x, y, z, 0, 0, 0);
 	}
 	
 	protected void drawLineParticle(EnumParticleTypes pt, int X, int Y, int Z, int W, Axis E) {
@@ -32,21 +24,21 @@ abstract class ParticleDrawer {
 				v = X;
 				while(v < (double)W) {
 					drawUnitParticle(pt, v, Y, Z);
-					v += 0.5;
+					v += 1.0;
 				}
 				break;
 			case Y:
 				v = Y;
 				while(v < (double)W) {
 					drawUnitParticle(pt, X, v, Z);
-					v += 0.5;
+					v += 1.0;
 				}
 				break;
 			case Z:
 				v = Z;
 				while(v < (double)W) {
 					drawUnitParticle(pt, X, Y, v);
-					v += 0.5;
+					v += 1.0;
 				}
 				break;
 		}
@@ -59,7 +51,7 @@ abstract class ParticleDrawer {
 		drawLineParticle(pt, minX, minY, minZ, maxX, Axis.X);
 		drawLineParticle(pt, minX, maxY, maxZ, maxX, Axis.X);
 		drawLineParticle(pt, minX, minY, maxZ, maxX, Axis.X);
-		drawLineParticle(pt, minX, maxY, maxZ, maxX, Axis.X);
+		drawLineParticle(pt, minX, maxY, minZ, maxX, Axis.X);
 		
 		//Y方向に描画
 		drawLineParticle(pt, minX, minY, minZ, maxY, Axis.Y);
@@ -74,26 +66,24 @@ abstract class ParticleDrawer {
 		drawLineParticle(pt, maxX, minY, minZ, maxZ, Axis.Z);
 	}
 	
-	public void drawOneBlockGrid(EnumParticleTypes pt,double x, double y, double z) {
-       	for(int bit = 0; (bit&(1<<3)) == 0; bit++) {
-       		drawUnitParticle(pt, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
-      			(bit&(1<<1)) == 0? y-0.5D: y+0.5D,
-      			(bit&(1<<2)) == 0? z-0.5D: z+0.5D);
-       	}
-        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
-        	drawUnitParticle(pt, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
-        		(bit&(1<<1)) == 0? y-0.5D: y+0.5D,
-        		z);
-        }
-        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
-        	drawUnitParticle(pt, (bit&(1<<0)) == 0? x-0.5D: x+0.5D,
-        		y,
-        		(bit&(1<<1)) == 0? z-0.5D: z+0.5D);
-        }
-        for(int bit = 0; (bit&(1<<2)) == 0; bit++) {
-        	drawUnitParticle(pt, x,
-        		(bit&(1<<0)) == 0? y-0.5D: y+0.5D,
-        		(bit&(1<<1)) == 0? z-0.5D: z+0.5D);
-        }
+	public void drawOneBlockGrid(EnumParticleTypes pt, double x, double y, double z) {
+		for(int i = 0; i < 3; i++) {
+			drawUnitParticle(pt, x, y, z);
+			drawUnitParticle(pt, x, y, z+1.0);
+			drawUnitParticle(pt, x, y+1.0, z);
+			drawUnitParticle(pt, x, y+1.0, z+1.0);
+			if(i != 1) {//2段目: 中点は表示しない
+				drawUnitParticle(pt, x, y, z+0.5);
+				drawUnitParticle(pt, x, y+0.5, z);
+				drawUnitParticle(pt, x, y+0.5, z+1.0);
+				drawUnitParticle(pt, x, y+1.0, z+0.5);
+			}
+			x += 0.5;
+		}
 	}
+	
+	public void drawOneBlockGrid(EnumParticleTypes pt, int xi, int yi, int zi) {
+		drawOneBlockGrid(pt, xi, yi, zi);
+	}
+	
 }

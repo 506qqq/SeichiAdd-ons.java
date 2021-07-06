@@ -8,23 +8,32 @@ import net.minecraftforge.common.config.Config.Type;
 //cfgファイルはご自由に書き換えてどうぞ。
 @Config(modid = SeichiAddons.MODID, type = Type.INSTANCE, name = "SeichiAdd-ons")
 public class CONFIG {
-	@Comment({"\n"
-			+ "*****************************************\n"
-			+ "ファイル削除で元のファイルが生成されます。\n"
-			+ "*****************************************\n"
-			+ "\n"
-			+ "パーティクル生成の周期"})
+	@Comment({
+		"\n" +
+		"*****************************************\n" + 
+		"ファイル削除で元のファイルが生成されます。\n" +
+		"*****************************************\n" +
+		"\n"})
+	
+	
     public static int stickItemID = 280;
 	public static int PARTICLECYCLETICK = 16;
+	public static int LinkCommandTextLengthLimit = 20;
+	
 	public static MSGTEXT MSG = new MSGTEXT();
+	
 	public static LINKTXT LINKS = new LINKTXT();
-	public static String[] seichiSkillName = {"エクス", "ミラージュ", "ドッカーン", "ボム", "レムリア",
-												 "エタ", "ホワイト" ,"ゼロ", "ダイヤモンド", "アサルト"};
-	public static int[] seichiSkillBreakRangeX = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
-	public static int[] seichiSkillBreakRangeY = {3, 3, 5, 7, 9, 11, 7, 11, 15, 11};
-	public static int[] seichiSkillBreakRangeZ = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
-	public static int[] seichiSkill_IsAssault = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1};
-	public static int[] seichiSkill_IsFluid = {0, 0, 0, 0, 0, 0, 1, 1, 1, 0};
+	public static boolean drawBuildSkillByRender = true;
+	
+	public static String[] stagnaSkillName = {"エクスプロージョン", "ミラージュ・フレア", "ドッ・カーン", "ボム", "レムリア", "エタ"};
+	public static int[] stagnaSkillBreakRangeXZ = {3, 5, 7, 9, 11, 13, 7, 11, 15, 11};
+	public static int[] stagnaSkillBreakRangeY = {3, 3, 5, 7, 9, 11, 7, 11, 15, 11};
+
+	public static String[] assaultSkillName = {"アサルト・アーマー", "ホワイト・ブレス", "アブソリュート・ゼロ",
+												"ダイヤモンド・ダスト", "ヴェンダー・ブリザード"};
+	public static int[] assaultSkillBreakRangeXYZ = {11, 9, 11, 13, 15};
+	public static boolean[] assaultIsClotSkill = {false, true, true, true, true};
+	
 	public static class MSGTEXT {
 		@Comment({"スキル有効時のメッセージ"})
 		public String ONDISABLESKILL = "直列設置: OFF";
@@ -34,7 +43,7 @@ public class CONFIG {
 	public static class LINKTXT {
 		public String NAME = "link";
 		public String USAGE = "/link [keywords]";
-		public String MESSAGE_HELP = "対応表はDiscordの<#ないぶてきなしよう>にて";
+		public String MESSAGE_HELP = "usage: /link <keyword>";
 		public String[] COMMAND_ALIASES = {"url", "urls", "li"};
 		public String[] KEYWORDS = {"hp", "rule", "map", "seichi", "build",
 				"public", "command", "qanda", "form", "discord", "youtube", "twitter",
@@ -45,6 +54,7 @@ public class CONFIG {
 				"loginrank", "ranklogin", "roguinrank", "voterank", "rankvote", "touhyourank",
 				"votejp", "jp", "voteorg", "org"
 				};
+		
 		public String[] URLS = {
 				"https://www.seichi.network/gigantic",
 				"https://www.seichi.network/rule",
@@ -90,6 +100,7 @@ public class CONFIG {
 				"https://minecraftservers.org/vote/575658",
 				"https://minecraftservers.org/vote/575658"
 		};
+		
 		public String[] DESCS = {
 				"HP[トップ]",
 				"HP[ルール]",
@@ -135,9 +146,11 @@ public class CONFIG {
 				"投票[org]",
 				"投票[org]"
 		};
+		
 		public String MESSAGE_BEGINSHOWRESULT = "§l------ 検索結果[%s] ------";
 		public String MESSAGE_FINISHSHOWRESULT = "§l------------------------";
 		public String MESSAGE_NOTFOUNDRESULT = "見つかりませんでした";
+		
 	}
 
 }

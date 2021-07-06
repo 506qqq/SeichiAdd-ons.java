@@ -1,0 +1,19 @@
+[
+{
+    "modinfoversion": 2,
+    "modid": "seichiaddons",
+    "name": "SeichiAdd-ons",
+    "description": "yourmoddescriprion",
+    "version": "0.2",
+    "mcversion": "1.12.2",
+    "url": "yourownwebsiteurl",
+    "updateUrl": "updatecheckurl",
+    "authorList": ["author1","author2"],
+    "credits": "credits",
+    "logoFile": "logofile",
+    "screenshots": ["screenshots"],
+    "requiredMods": ["Forge","otherapi"],
+    "dependencies": ["api"],
+    "useDependencyInformation": true
+}
+]

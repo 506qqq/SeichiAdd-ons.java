@@ -7,7 +7,11 @@ public class BuildSkill {
 	public static enum Mode{
 		OnUpper, OnLower, OnDisable
 	};
-    public Mode skillMode;
+    public static Mode skillMode;
+
+    public static Mode getMode() {
+    	return skillMode;
+    }
 
     public static String getServerMsgOnDisable() {
     	return CONFIG.MSG.ONDISABLESKILL;

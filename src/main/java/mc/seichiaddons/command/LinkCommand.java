@@ -37,36 +37,38 @@ public class LinkCommand implements ICommand {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
 		if(args.length == 0) {
 			showUsage();
+			return;
 		}
-		else if(args.length == 1) {
-			matchResult.clear();
-			boolean hasResultFound = false;
-			String arg = args[0];
-			String keyword;
-			if(arg == "help") {
-				showUsage();
+		
+		if(args.length >= 2) {
+			showMessage("引数の数が無効です。");
+			return;
+		}
+		
+		matchResult.clear();
+		boolean hasResultFound = false;
+		String arg = args[0];
+		String keyword;
+		if(arg == "help") {
+			showUsage();
+		}
+		for(int i = 0; i < keywords.length; i++) {
+			keyword = keywords[i];
+			if(keyword.length() > arg.length()) {
+				keyword = keyword.substring(0, arg.length());
 			}
-			for(int i = 0; i < keywords.length; i++) {
-				keyword = keywords[i];
-				if(keyword.length() > arg.length()) {
-					keyword = keyword.substring(0, arg.length());
-				}
-				if(arg.equals(keyword)) {
-					matchResult.add(i);
-					hasResultFound = true;
-				}
-			}
-			if(hasResultFound) {
-				showMessage(String.format(CONFIG.LINKS.MESSAGE_BEGINSHOWRESULT, arg));
-				matchResult.forEach((i) -> showLink(Links[i], Descriptions[i]));
-				showMessage(CONFIG.LINKS.MESSAGE_FINISHSHOWRESULT);
-			} 
-			else { 
-				showMessage(CONFIG.LINKS.MESSAGE_NOTFOUNDRESULT);
+			if(arg.equals(keyword)) {
+				matchResult.add(i);
+				hasResultFound = true;
 			}
 		}
-		else {
-			showMessage("Error");
+		if(hasResultFound) {
+			showMessage(String.format(CONFIG.LINKS.MESSAGE_BEGINSHOWRESULT, arg));
+			matchResult.forEach((i) -> showLink(Links[i], Descriptions[i]));
+			showMessage(CONFIG.LINKS.MESSAGE_FINISHSHOWRESULT);
+		} 
+		else { 
+			showMessage(CONFIG.LINKS.MESSAGE_NOTFOUNDRESULT);
 		}
 	}
 
@@ -88,7 +90,15 @@ public class LinkCommand implements ICommand {
 	}
 
 	public void showLink(String Url, String Description) {
-		TextComponentString Str = new TextComponentString(Description + ": " + Url);
+		String rawStr = Description + ":" + Url;
+		TextComponentString Str;
+		if(rawStr.length() < CONFIG.LinkCommandTextLengthLimit) {
+			Str = new TextComponentString(rawStr);
+		}
+		else {
+			Str = new TextComponentString(rawStr.substring(0, 
+					CONFIG.LinkCommandTextLengthLimit-1) + "...");
+		}
 		Str.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Url));
 		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(Str);
 	}

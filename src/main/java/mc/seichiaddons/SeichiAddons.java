@@ -3,9 +3,10 @@ package mc.seichiaddons;
 import mc.seichiaddons.command.LinkCommand;
 import mc.seichiaddons.skill.particle.BuildSkillDrawer;
 import mc.seichiaddons.skill.particle.SeichiSkillDrawer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.world.World;
+import mc.seichiaddons.skill.render.AssaultSkillRenderStateContainer;
+import mc.seichiaddons.skill.render.BuildSkillRenderStateContainer;
+import mc.seichiaddons.skill.state.BuildSkillStateContainer;
+import mc.seichiaddons.skill.state.SeichiSkillStateContainer;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -21,21 +22,20 @@ public class SeichiAddons {
 
     public static BuildSkillDrawer buildSkill;
     public static SeichiSkillDrawer seichiSkill;
-
-    public static EntityPlayerSP player;
-    public static World world;
-
-    public static void resetStat() {
-    	player = Minecraft.getMinecraft().player;
-    	world = Minecraft.getMinecraft().world;
-    }
     
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        buildSkill = new BuildSkillDrawer(player, world);
-        seichiSkill = new SeichiSkillDrawer(player, world);
+        buildSkill = new BuildSkillDrawer();
+        seichiSkill = new SeichiSkillDrawer();
         ClientCommandHandler.instance.registerCommand(new LinkCommand());
-        resetStat();
+        resetSkillState();
+    }
+    
+    public void resetSkillState() {
+   		BuildSkillStateContainer.setModeDisable();
+   		SeichiSkillStateContainer.setModeDisable();
+   		BuildSkillRenderStateContainer.cancelRender();
+   		AssaultSkillRenderStateContainer.cancelRender();
     }
 }

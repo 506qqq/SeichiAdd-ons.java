@@ -2,22 +2,20 @@ package mc.seichiaddons.skill;
 
 public class SeichiSkill{
 	private String skillName;
-	protected int breakRangeX;
+	public int breakRangeXZ;
 	protected int breakRangeY;
-	protected int breakRangeZ;
-	public SeichiSkill(String name, int X, int Y, int Z) {
+	
+	public SeichiSkill(String name, int XZ, int Y) {
 		skillName = name;
-		breakRangeX = X;
+		breakRangeXZ = XZ;
 		breakRangeY = Y;
-		breakRangeZ = Z;
 		
 	}
 	
 	public SeichiSkill() {
 		skillName = null;
-		breakRangeX = 0;
+		breakRangeXZ = 0;
 		breakRangeY = 0;
-		breakRangeZ = 0;
 	}
 	public boolean isNotNull() {
 		return this != null;
@@ -27,24 +25,6 @@ public class SeichiSkill{
 	}
 	public String chatMsgOnDisable() {
 		return this.skillName + ": OFF";
-	}
-	public int breakUP() {
-		return breakRangeY - 2;
-	}
-	public int breakDOWN() {
-		return 1;
-	}
-	public int breakRIGHT() {
-		return breakRangeX / 2;
-	}
-	public int breakLEFT() {
-		return breakRangeX / 2;
-	}
-	public int breakBACK() {
-		return 0;
-	}
-	public int breakFRONT() {
-		return breakRangeZ;
 	}
 
 }
